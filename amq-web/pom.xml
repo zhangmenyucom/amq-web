@@ -1,0 +1,178 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.taylor.api</groupId>
+		<artifactId>parent-api</artifactId>
+		<version>1.0.1-SNAPSHOT</version>
+	</parent>
+
+	<groupId>com.taylor</groupId>
+	<artifactId>amq-web</artifactId>
+	<packaging>war</packaging>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>amq-web</name>
+	<url>http://maven.apache.org</url>
+	<properties>
+		<dubbo.application.name>web-amq</dubbo.application.name>
+		<service.version>0.0.1</service.version>
+		<dubbo.timeout>1000000</dubbo.timeout>
+		<dubbo.registry.protocol>zookeeper</dubbo.registry.protocol>
+		<dubbo.protocol.name>dubbo</dubbo.protocol.name>
+	</properties>
+
+	<dependencies>
+		<!--第三方服务接口 -->
+		<dependency>
+			<groupId>com.taylor.api</groupId>
+			<artifactId>amq-service</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.javassist</groupId>
+			<artifactId>javassist</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jms</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-pool</groupId>
+			<artifactId>commons-pool</artifactId>
+			<version>1.6</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.transaction</groupId>
+			<artifactId>jta</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>dubbo</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.netty</groupId>
+			<artifactId>netty</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.esotericsoftware.kryo</groupId>
+			<artifactId>kryo</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.javakaffee</groupId>
+			<artifactId>kryo-serializers</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.belerweb</groupId>
+			<artifactId>pinyin4j</artifactId>
+			<version>2.5.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.json/json -->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20160212</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>2.8.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.8.0</version>
+		</dependency>
+
+	</dependencies>
+
+
+	<build>
+		<finalName>amq-web</finalName>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>*/*</include>
+					<include>*</include>
+				</includes>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+	</build>
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<!-- 本地直连地址 -->
+				<dubbo.protocol.port>20552</dubbo.protocol.port>
+				<dubbo.direct.url>dubbo://localhost:20552</dubbo.direct.url>
+				<dubbo.registry.address>192.168.186.128:2181</dubbo.registry.address>
+				<!-- log4j配置 -->
+				<log4j.root.logger>info,DEBUG,stdout,DebugLogFile,CONSOLE</log4j.root.logger>
+			</properties>
+		</profile>
+		<profile>
+			<id>test</id>
+			<properties>
+				<!-- 本地直连地址 -->
+				<dubbo.protocol.port>20554</dubbo.protocol.port>
+				<dubbo.direct.url>dubbo://192.168.80.129:20554</dubbo.direct.url>
+				<dubbo.registry.address>192.168.186.128:2181</dubbo.registry.address>
+				<!-- log4j配置 -->
+				<log4j.root.logger>info,DEBUG,DebugLogFile,ERROR,stdout,ErrrorLogFile,CONSOLE</log4j.root.logger>
+			</properties>
+		</profile>
+		<profile>
+			<id>pro</id>
+			<properties>
+				<!-- dubbo -->
+				<dubbo.protocol.port>20558</dubbo.protocol.port>
+				<dubbo.direct.url></dubbo.direct.url>
+				<dubbo.registry.address>192.168.186.128:2181</dubbo.registry.address>
+				<!-- log4j配置 -->
+				<log4j.root.logger>ERROR,stdout,ErrrorLogFile,CONSOLE</log4j.root.logger>
+			</properties>
+		</profile>
+	</profiles>
+</project>
